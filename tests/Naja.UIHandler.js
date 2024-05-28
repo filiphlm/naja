@@ -163,7 +163,7 @@ describe('UIHandler', function () {
 			naja.initialize();
 
 			//naja.uiHandler.bindLink = sinon.spy(() => { return true; });
-			naja.uiHandler.bindForm = sinon.spy(() => { return true; });
+			naja.uiHandler.bindForm = sinon.spy(function(){});
 
 			//const anchorElement = document.createElement('a');
 			//anchorElement.className = 'ajax';
