@@ -87,9 +87,8 @@ export class UIHandler extends EventTarget {
 
 			const {form} = element;
 			if (form) {
-				// eslint-disable-next-line no-nested-ternary,no-extra-parens
-				method = (element.getAttribute('formmethod') ?? form?.getAttribute('method') ?? 'GET').toUpperCase();
-				url = element.getAttribute('formaction') ?? form?.getAttribute('action') ?? window.location.pathname + window.location.search;
+				method = (element.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'GET').toUpperCase();
+				url = element.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
 				data = new FormData(form, element);
 			}
 		}
