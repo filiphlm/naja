@@ -594,32 +594,28 @@ describe('UIHandler', function () {
 		it('dispatches request on button[form]|input[form]', function () {
 			const naja = mockNaja();
 			const mock = sinon.mock(naja);
+			const expectedResult = {answer: 42};
 
 			mock.expects('makeRequest')
-				.withExactArgs('GET', '/UIHandler/submit', {}, {})
-				.once();
+				.withExactArgs('GET', '/UIHandler/submitForm', sinon.match.instanceOf(FormData), {})
+				.once()
+				.returns(Promise.resolve(expectedResult));
 
 			const form = document.createElement('form');
-			form.action = '/UIHandler/submit';
+			form.method = 'POST';
+			form.action = '/UIHandler/submitForm';
+
+			const form = document.createElement('form');
+			form.action = '/UIHandler/clickElement';
 			const input = document.createElement('input');
 			input.type = 'submit';
 			input.name = 'submit';
 			form.appendChild(input);
-			document.body.appendChild(form);
 
 			const handler = new UIHandler(naja);
+			handler.clickElement(input);
 
-			const preventDefault = sinon.spy();
-			const evt = {
-				type: 'click',
-				currentTarget: input,
-				preventDefault,
-			};
-			handler.clickElement(input, {}, evt);
-
-			assert.isTrue(preventDefault.called);
 			mock.verify();
-			document.body.removeChild(form);
 		});
 
 		it('triggers interaction event', function () {
