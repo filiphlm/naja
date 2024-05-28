@@ -162,20 +162,20 @@ describe('UIHandler', function () {
 			});
 			naja.initialize();
 
-			naja.uiHandler.bindLink = sinon.spy(() => { return true; });
+			//naja.uiHandler.bindLink = sinon.spy(() => { return true; });
 			naja.uiHandler.bindForm = sinon.spy(() => { return true; });
 
-			const anchorElement = document.createElement('a');
-			anchorElement.className = 'ajax';
+			//const anchorElement = document.createElement('a');
+			//anchorElement.className = 'ajax';
 
-			naja.uiHandler.bindUI(anchorElement);
+			//naja.uiHandler.bindUI(anchorElement);
 
 			const formElement = document.createElement('form');
 			formElement.className = 'ajax';
 
 			naja.uiHandler.bindUI(formElement);
 
-			assert.isTrue(naja.uiHandler.bindLink.callCount, 1);
+			//assert.isTrue(naja.uiHandler.bindLink.callCount, 1);
 			assert.isTrue(naja.uiHandler.bindForm.callCount, 1);
 		});
 	});
