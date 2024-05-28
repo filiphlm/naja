@@ -591,6 +591,29 @@ describe('UIHandler', function () {
 				});
 		});
 
+		it('dispatches request on button[form]|input[form]', function () {
+			const naja = mockNaja();
+			const mock = sinon.mock(naja);
+			const containsSubmit = sinon.match((value) => value.has('submit'));
+
+			mock.expects('makeRequest')
+				.withExactArgs('GET', '/UIHandler/submit', sinon.match.instanceOf(FormData).and(containsSubmit), {fetch: {}})
+				.once();
+
+			const handler = new UIHandler(naja);
+
+			const preventDefault = sinon.spy();
+			const evt = {
+				type: 'click',
+				currentTarget: this.input,
+				preventDefault,
+			};
+			handler.handleUI(evt);
+
+			assert.isTrue(preventDefault.called);
+			mock.verify();
+		});
+
 		it('triggers interaction event', function () {
 			const naja = mockNaja();
 			const mock = sinon.mock(naja);
