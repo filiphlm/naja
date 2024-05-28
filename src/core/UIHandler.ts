@@ -73,31 +73,25 @@ export class UIHandler extends EventTarget {
 	}
 
 	public async clickElement(element: HTMLElement, options: Options = {}, event?: MouseEvent): Promise<Payload> {
-		let method: string = 'GET', url: string = '', data: any;
-
 		if (element.tagName === 'A') {
 			assert(element instanceof HTMLAnchorElement);
 
-			method = 'GET';
-			url = element.href;
-			data = null;
+			return this.processInteraction(element, 'GET', element.href, null, options, event);
 
 		} else if (element.tagName === 'INPUT' || element.tagName === 'BUTTON') {
 			assert(element instanceof HTMLInputElement || element instanceof HTMLButtonElement);
 
 			const {form} = element;
 			if (form) {
-				method = (element.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'GET').toUpperCase();
-				url = element.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
-				data = new FormData(form, element);
+				return this.submitForm(form, options, event);
 			}
 		}
 
-		return this.processInteraction(element, method, url, data, options, event);
+		return {};
 	}
 
-	public async submitForm(form: HTMLFormElement, options: Options = {}, event?: SubmitEvent): Promise<Payload> {
-		const submitter = event?.submitter;
+	public async submitForm(form: HTMLFormElement, options: Options = {}, event?: Event): Promise<Payload> {
+		const submitter = event instanceof SubmitEvent ? event?.submitter : null;
 		const method = (submitter?.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'GET').toUpperCase();
 		const url = submitter?.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
 		const data = new FormData(form, submitter);
