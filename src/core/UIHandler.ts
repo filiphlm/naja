@@ -91,7 +91,7 @@ export class UIHandler extends EventTarget {
 	}
 
 	public async submitForm(form: HTMLFormElement, options: Options = {}, event?: Event): Promise<Payload> {
-		const submitter = event instanceof SubmitEvent ? event?.submitter : null;
+		const submitter = event?.type === 'submit' ? (event as SubmitEvent)?.submitter : null;
 		const method = (submitter?.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'GET').toUpperCase();
 		const url = submitter?.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
 		const data = new FormData(form, submitter);
