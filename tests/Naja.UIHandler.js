@@ -173,7 +173,7 @@ describe('UIHandler', function () {
 			const formElement = document.createElement('form');
 			formElement.className = 'ajax';
 
-			naja.uiHandler.bindUI(anchorElement);
+			naja.uiHandler.bindUI(formElement);
 
 			assert.isTrue(naja.uiHandler.bindLink.callCount, 1);
 			assert.isTrue(naja.uiHandler.bindForm.callCount, 1);
