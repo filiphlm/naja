@@ -1,5 +1,5 @@
 import {Naja, Options, Payload} from '../Naja';
-import {assert, onDomReady, TypedEventListener} from '../utils';
+import {onDomReady, TypedEventListener} from '../utils';
 
 export class UIHandler extends EventTarget {
 	public selector: string = '.ajax';
@@ -74,14 +74,10 @@ export class UIHandler extends EventTarget {
 
 	public async clickElement(element: HTMLElement, options: Options = {}, event?: MouseEvent): Promise<Payload> {
 		if (element.tagName === 'A') {
-			assert(element instanceof HTMLAnchorElement);
-
-			return this.processInteraction(element, 'GET', element.href, null, options, event);
+			return this.processInteraction(element, 'GET', (element as HTMLAnchorElement).href, null, options, event);
 
 		} else if (element.tagName === 'INPUT' || element.tagName === 'BUTTON') {
-			assert(element instanceof HTMLInputElement || element instanceof HTMLButtonElement);
-
-			const {form} = element;
+			const {form} = (element as HTMLButtonElement | HTMLInputElement);
 			if (form) {
 				return this.submitForm(form, options, event);
 			}
