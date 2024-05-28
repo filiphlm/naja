@@ -605,7 +605,7 @@ describe('UIHandler', function () {
 			const input = document.createElement('input');
 			input.type = 'submit';
 			input.name = 'submit';
-			form.appendChild(this.input);
+			form.appendChild(input);
 
 			const handler = new UIHandler(naja);
 
