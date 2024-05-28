@@ -608,7 +608,7 @@ describe('UIHandler', function () {
 				currentTarget: this.input,
 				preventDefault,
 			};
-			handler.handleUI(evt);
+			handler.clickElement(evt);
 
 			assert.isTrue(preventDefault.called);
 			mock.verify();
