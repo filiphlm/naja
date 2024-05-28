@@ -606,6 +606,7 @@ describe('UIHandler', function () {
 			input.type = 'submit';
 			input.name = 'submit';
 			form.appendChild(input);
+			document.body.appendChild(form);
 
 			const handler = new UIHandler(naja);
 
@@ -619,6 +620,7 @@ describe('UIHandler', function () {
 
 			assert.isTrue(preventDefault.called);
 			mock.verify();
+			document.body.removeChild(form);
 		});
 
 		it('triggers interaction event', function () {
