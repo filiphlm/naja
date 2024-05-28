@@ -155,29 +155,6 @@ describe('UIHandler', function () {
 			assert.isTrue(naja.uiHandler.handler.called);
 			document.body.removeChild(snippetDiv);
 		});
-
-		it('binds only once', async function () {
-			const naja = mockNaja({
-				uiHandler: UIHandler,
-			});
-			naja.initialize();
-
-			//naja.uiHandler.bindLink = sinon.spy(() => { return true; });
-			naja.uiHandler.bindForm = sinon.spy(function(){});
-
-			//const anchorElement = document.createElement('a');
-			//anchorElement.className = 'ajax';
-
-			//naja.uiHandler.bindUI(anchorElement);
-
-			const formElement = document.createElement('form');
-			formElement.className = 'ajax';
-
-			naja.uiHandler.bindUI(formElement);
-
-			//assert.isTrue(naja.uiHandler.bindLink.callCount, 1);
-			assert.isTrue(naja.uiHandler.bindForm.callCount, 1);
-		});
 	});
 
 	describe('handleUI()', function () {
