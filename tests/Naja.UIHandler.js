@@ -155,6 +155,22 @@ describe('UIHandler', function () {
 			assert.isTrue(naja.uiHandler.handler.called);
 			document.body.removeChild(snippetDiv);
 		});
+
+		it('binds only once', async function () {
+			const naja = mockNaja({
+				uiHandler: UIHandler,
+			});
+			naja.initialize();
+
+			const anchorElement = document.createElement('a');
+			anchorElement.className = 'ajax';
+	
+			naja.uiHandler.bindElement = sinon.spy((evt) => evt.preventDefault());
+			naja.uiHandler.bindUI(anchorElement);
+
+			assert.isTrue(naja.uiHandler.bindElement.callCount, 1);
+		});
+
 	});
 
 	describe('handleUI()', function () {
