@@ -594,10 +594,9 @@ describe('UIHandler', function () {
 		it('dispatches request on button[form]|input[form]', function () {
 			const naja = mockNaja();
 			const mock = sinon.mock(naja);
-			const containsSubmit = sinon.match((value) => value.has('submit'));
 
 			mock.expects('makeRequest')
-				.withExactArgs('GET', '/UIHandler/submit', sinon.match.instanceOf(FormData).and(containsSubmit), {})
+				.withExactArgs('GET', '/UIHandler/submit', {}, {})
 				.once();
 
 			const form = document.createElement('form');
