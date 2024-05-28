@@ -600,12 +600,19 @@ describe('UIHandler', function () {
 				.withExactArgs('GET', '/UIHandler/submit', sinon.match.instanceOf(FormData).and(containsSubmit), {fetch: {}})
 				.once();
 
+			const form = document.createElement('form');
+			form.action = '/UIHandler/submit';
+			const input = document.createElement('input');
+			input.type = 'submit';
+			input.name = 'submit';
+			form.appendChild(this.input);
+
 			const handler = new UIHandler(naja);
 
 			const preventDefault = sinon.spy();
 			const evt = {
 				type: 'click',
-				currentTarget: this.input,
+				currentTarget: input,
 				preventDefault,
 			};
 			handler.clickElement(evt);
