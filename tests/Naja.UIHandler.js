@@ -597,7 +597,7 @@ describe('UIHandler', function () {
 			const expectedResult = {answer: 42};
 
 			mock.expects('makeRequest')
-				.withExactArgs('GET', '/UIHandler/submitForm', sinon.match.instanceOf(FormData), {})
+				.withExactArgs('POST', '/UIHandler/submitForm', sinon.match.instanceOf(FormData), {})
 				.once()
 				.returns(Promise.resolve(expectedResult));
 
@@ -606,7 +606,6 @@ describe('UIHandler', function () {
 			form.action = '/UIHandler/submitForm';
 			const input = document.createElement('input');
 			input.type = 'submit';
-			input.name = 'submit';
 			form.appendChild(input);
 
 			const handler = new UIHandler(naja);
