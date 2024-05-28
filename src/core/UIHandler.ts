@@ -77,9 +77,11 @@ export class UIHandler extends EventTarget {
 			return this.processInteraction(element, 'GET', (element as HTMLAnchorElement).href, null, options, event);
 
 		} else if (element.tagName === 'INPUT' || element.tagName === 'BUTTON') {
-			const {form} = (element as HTMLButtonElement | HTMLInputElement);
+			const {form} = element as HTMLButtonElement | HTMLInputElement;
 			if (form) {
-				return this.submitForm(form, options, event);
+				return new Promise(() => {
+					form.requestSubmit(element);
+				});
 			}
 		}
 
