@@ -165,7 +165,7 @@ describe('UIHandler', function () {
 			const anchorElement = document.createElement('a');
 			anchorElement.className = 'ajax';
 
-			naja.uiHandler.bindLink = sinon.spy((evt) => evt.preventDefault());
+			naja.uiHandler.bindLink = sinon.spy(() => {});
 			naja.uiHandler.bindUI(anchorElement);
 
 			assert.isTrue(naja.uiHandler.bindLink.callCount, 1);
