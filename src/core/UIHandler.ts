@@ -64,7 +64,7 @@ export class UIHandler extends EventTarget {
 		if (event.type === 'submit') {
 			const {submitter} = event as SubmitEvent;
 			if ((element as HTMLFormElement).matches(this.selector) || submitter?.matches(this.selector)) {
-				this.submitForm(element as HTMLFormElement, options, event as SubmitEvent).catch(ignoreErrors);
+				this.submitForm(element as HTMLFormElement, options, event).catch(ignoreErrors);
 			}
 
 		} else if (event.type === 'click') {
