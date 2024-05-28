@@ -22,29 +22,29 @@ export class UIHandler extends EventTarget {
 	public bindUI(element: Element): void {
 		const selector = `a${this.selector}`;
 
-		const bindElement = (element: HTMLAnchorElement) => {
-			element.removeEventListener('click', this.handler);
-			element.addEventListener('click', this.handler);
-		};
-
 		if (element.matches(selector)) {
-			return bindElement(element as HTMLAnchorElement);
+			return this.bindLink(element as HTMLAnchorElement);
 		}
 
 		const elements = element.querySelectorAll(selector);
-		elements.forEach((element) => bindElement(element as HTMLAnchorElement));
-
-		const bindForm = (form: HTMLFormElement) => {
-			form.removeEventListener('submit', this.handler);
-			form.addEventListener('submit', this.handler);
-		};
+		elements.forEach((element) => this.bindLink(element as HTMLAnchorElement));
 
 		if (element.tagName === 'FORM') {
-			return bindForm(element as HTMLFormElement);
+			return this.bindForm(element as HTMLFormElement);
 		}
 
 		const forms = element.querySelectorAll('form');
-		forms.forEach((form) => bindForm(form as HTMLFormElement));
+		forms.forEach((form) => this.bindForm(form as HTMLFormElement));
+	}
+
+	private bindForm(form: HTMLFormElement): void {
+		form.removeEventListener('submit', this.handler);
+		form.addEventListener('submit', this.handler);
+	}
+
+	private bindLink(element: HTMLAnchorElement): void {
+		element.removeEventListener('click', this.handler);
+		element.addEventListener('click', this.handler);
 	}
 
 	private handleUI(event: Event | MouseEvent | SubmitEvent): void {
@@ -72,7 +72,7 @@ export class UIHandler extends EventTarget {
 		}
 	}
 
-	public async clickElement(element: HTMLAnchorElement, options: Options = {}, event?: MouseEvent): Promise<Payload> {
+	public async clickElement(element: HTMLElement, options: Options = {}, event?: MouseEvent): Promise<Payload> {
 		let method: string = 'GET', url: string = '', data: any;
 
 		if (element.tagName === 'A') {
