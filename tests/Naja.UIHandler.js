@@ -604,9 +604,6 @@ describe('UIHandler', function () {
 			const form = document.createElement('form');
 			form.method = 'POST';
 			form.action = '/UIHandler/submitForm';
-
-			const form = document.createElement('form');
-			form.action = '/UIHandler/clickElement';
 			const input = document.createElement('input');
 			input.type = 'submit';
 			input.name = 'submit';
