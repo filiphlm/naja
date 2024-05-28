@@ -616,7 +616,7 @@ describe('UIHandler', function () {
 				currentTarget: input,
 				preventDefault,
 			};
-			handler.clickElement(evt);
+			handler.clickElement(input, {}, evt);
 
 			assert.isTrue(preventDefault.called);
 			mock.verify();
