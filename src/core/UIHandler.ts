@@ -77,22 +77,34 @@ export class UIHandler extends EventTarget {
 			return this.processInteraction(element, 'GET', (element as HTMLAnchorElement).href, null, options, event);
 
 		} else if (element.tagName === 'INPUT' || element.tagName === 'BUTTON') {
-			const {form} = element as HTMLButtonElement | HTMLInputElement;
-			if (form) {
-				return this.submitForm(form, options, event);
-			}
+			return this.submitForm(element, options, event);
+
 		}
 
 		return {};
 	}
 
-	public async submitForm(form: HTMLFormElement, options: Options = {}, event?: Event): Promise<Payload> {
-		const submitter = event?.type === 'submit' ? (event as SubmitEvent)?.submitter : null;
-		const method = (submitter?.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'get').toUpperCase();
-		const url = submitter?.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
-		const data = new FormData(form, submitter);
+	public async submitForm(formOrSubmitter: HTMLFormElement|HTMLElement, options: Options = {}, event?: Event): Promise<Payload> {
+		let form: HTMLFormElement|null = null;
+		let submitter: HTMLElement|null|undefined = null;
 
-		return this.processInteraction(submitter ?? form, method, url, data, options, event);
+		if (formOrSubmitter.tagName === 'FORM') {
+			form = formOrSubmitter as HTMLFormElement;
+			submitter = event?.type === 'submit' ? (event as SubmitEvent)?.submitter : null;
+		} else if (formOrSubmitter.tagName === 'INPUT' || formOrSubmitter.tagName === 'BUTTON') {
+			form = (formOrSubmitter as HTMLButtonElement | HTMLInputElement).form ?? null;
+			submitter = formOrSubmitter;
+		}
+
+		if (form) {
+			const method = (submitter?.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'GET').toUpperCase();
+			const url = submitter?.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
+			const data = new FormData(form, submitter);
+
+			return this.processInteraction(submitter ?? form, method, url, data, options, event);
+		}
+
+		return {};
 	}
 
 	public async processInteraction(
