@@ -642,7 +642,7 @@ describe('UIHandler', function () {
 			mock.verify();
 		});
 
-		it('does not trigger interaction event', function () {
+		it('does not trigger interaction event on non-hyperlink|:not([form]) elements', function () {
 			const naja = mockNaja();
 
 			const btn = document.createElement('button');
