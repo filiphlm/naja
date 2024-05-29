@@ -641,6 +641,20 @@ describe('UIHandler', function () {
 
 			mock.verify();
 		});
+
+		it('does not trigger interaction event', function () {
+			const naja = mockNaja();
+
+			const btn = document.createElement('button');
+
+			const listener = sinon.spy();
+			const handler = new UIHandler(naja);
+			handler.addEventListener('interaction', listener);
+
+			handler.clickElement(btn);
+
+			assert.isFalse(listener.called);
+		});
 	});
 
 	describe('submitForm()', function () {
