@@ -64,10 +64,7 @@ export class UIHandler extends EventTarget {
 		if (event.type === 'submit') {
 			const {submitter} = event as SubmitEvent;
 			if ((element as HTMLFormElement).matches(this.selector) || submitter?.matches(this.selector)) {
-				const method = getFormMethod(element as HTMLFormElement, submitter);
-				const url = getFormAction(element as HTMLFormElement, submitter);
-				const data = new FormData(element as HTMLFormElement, submitter);
-				this.processInteraction(element as HTMLFormElement, method, url, data, options, event).catch(ignoreErrors);
+				this.submitForm(element as HTMLFormElement, options, event).catch(ignoreErrors);
 			}
 
 		} else if (event.type === 'click') {
@@ -91,8 +88,8 @@ export class UIHandler extends EventTarget {
 
 	public async submitForm(form: HTMLFormElement, options: Options = {}, event?: Event): Promise<Payload> {
 		const submitter = event?.type === 'submit' ? (event as SubmitEvent)?.submitter : null;
-		const method = getFormMethod(form, submitter);
-		const url = getFormAction(form, submitter);
+		const method = (submitter?.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'get').toUpperCase();
+		const url = submitter?.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
 		const data = new FormData(form, submitter);
 
 		return this.processInteraction(submitter ?? form, method, url, data, options, event);
@@ -133,10 +130,6 @@ export class UIHandler extends EventTarget {
 	declare public addEventListener: <K extends keyof UIHandlerEventMap | string>(type: K, listener: TypedEventListener<UIHandler, K extends keyof UIHandlerEventMap ? UIHandlerEventMap[K] : CustomEvent>, options?: boolean | AddEventListenerOptions) => void;
 	declare public removeEventListener: <K extends keyof UIHandlerEventMap | string>(type: K, listener: TypedEventListener<UIHandler, K extends keyof UIHandlerEventMap ? UIHandlerEventMap[K] : CustomEvent>, options?: boolean | AddEventListenerOptions) => void;
 }
-
-const getFormAction = ( form: HTMLFormElement, submitter?: HTMLElement|null ) => submitter?.getAttribute('formaction') ?? form.getAttribute('action') ?? window.location.pathname + window.location.search;
-
-const getFormMethod = (form: HTMLFormElement, submitter?: HTMLElement|null) => (submitter?.getAttribute('formmethod') ?? form.getAttribute('method') ?? 'get').toUpperCase();
 
 export type InteractionEvent = CustomEvent<{element: Element, originalEvent?: Event, options: Options}>;
 
