@@ -645,7 +645,7 @@ describe('UIHandler', function () {
 		it('does not trigger interaction event on non-hyperlink|:not([form]) elements', function () {
 			const naja = mockNaja();
 
-			const btn = document.createElement('dialog');
+			const btn = document.createElement('button');
 
 			const listener = sinon.spy();
 			const handler = new UIHandler(naja);
