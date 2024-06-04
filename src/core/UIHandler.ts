@@ -84,16 +84,15 @@ export class UIHandler extends EventTarget {
 		return {};
 	}
 
-	public async submitForm(formOrSubmitter: HTMLFormElement|HTMLElement, options: Options = {}, event?: Event): Promise<Payload> {
-		let form: HTMLFormElement|null = null;
+	public async submitForm(sender: HTMLFormElement|HTMLElement, options: Options = {}, event?: Event): Promise<Payload> {
+		let form: HTMLFormElement|null = sender.tagName === 'FORM' ? sender as HTMLFormElement : null;
 		let submitter: HTMLElement|null|undefined = null;
 
-		if (formOrSubmitter.tagName === 'FORM') {
-			form = formOrSubmitter as HTMLFormElement;
-			submitter = event?.type === 'submit' ? (event as SubmitEvent)?.submitter : null;
-		} else if (formOrSubmitter.tagName === 'INPUT' || formOrSubmitter.tagName === 'BUTTON') {
-			form = (formOrSubmitter as HTMLButtonElement | HTMLInputElement).form ?? null;
-			submitter = formOrSubmitter;
+		if (event?.type === 'submit') {
+			submitter = (event as SubmitEvent)?.submitter;
+		} else if (sender.tagName === 'INPUT' || sender.tagName === 'BUTTON') {
+			form = (sender as HTMLButtonElement | HTMLInputElement).form ?? null;
+			submitter = sender;
 		}
 
 		if (form) {
