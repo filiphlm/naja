@@ -77,8 +77,8 @@ export class UIHandler extends EventTarget {
 			return this.processInteraction(element, 'GET', (element as HTMLAnchorElement).href, null, options, event);
 
 		} else if (element.tagName === 'INPUT' || element.tagName === 'BUTTON' && (element as HTMLButtonElement | HTMLInputElement).form) {
-			return this.submitForm(element, options, event);
-
+			// Do nothing. If it's supposed to be form submission, let it be resolved on the submit event.
+			(element as HTMLButtonElement | HTMLInputElement).form?.requestSubmit(element);
 		}
 
 		return {};
