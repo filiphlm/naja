@@ -619,16 +619,27 @@ describe('UIHandler', function () {
 			mock.verify();
 		});
 
-		it('does not trigger interaction event on :not(a[href]) elements', function () {
+		it('does trigger interaction event on form elements eventually', function () {
 			const naja = mockNaja();
+			const mock = sinon.mock(naja);
+			const containsSubmit = sinon.match((value) => value.has('defaultSubmit'));
 
-			const btn = document.createElement('button');
+			mock.expects('makeRequest')
+				.withExactArgs('GET', '/UIHandler/defaultSubmit', sinon.match.instanceOf(FormData).and(containsSubmit), {})
+				.once();
+
+			const form = document.createElement('form');
+			form.method = 'GET';
+			form.action = '/UIHandler/submitForm';
+			const button = document.createElement('button');
+			button.name = 'defaultSubmit'
+			form.appendChild(button)
 
 			const listener = sinon.spy();
 			const handler = new UIHandler(naja);
 			handler.addEventListener('interaction', listener);
 
-			handler.clickElement(btn);
+			handler.clickElement(button);
 
 			assert.isFalse(listener.called);
 		});
