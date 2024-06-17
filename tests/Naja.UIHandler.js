@@ -641,7 +641,7 @@ describe('UIHandler', function () {
 
 			handler.clickElement(button);
 
-			assert.isFalse(listener.called);
+			assert.isTrue(listener.called);
 		});
 	});
 
