@@ -619,7 +619,7 @@ describe('UIHandler', function () {
 			mock.verify();
 		});
 
-		it('does trigger interaction event on form elements eventually', function () {
+		it('triggers interaction event on form elements', function () {
 			const naja = mockNaja();
 			const mock = sinon.mock(naja);
 			const containsSubmit = sinon.match((value) => value.has('defaultSubmit'));
