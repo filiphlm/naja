@@ -1,5 +1,5 @@
 import {mockNaja} from './setup/mockNaja';
-import {assert} from 'chai';
+import {assert, expect} from 'chai';
 import sinon from 'sinon';
 
 import {UIHandler} from '../src/core/UIHandler';
@@ -177,6 +177,22 @@ describe('UIHandler', function () {
 
 			assert.isTrue(naja.uiHandler.handler.called);
 			document.body.removeChild(snippetDiv);
+		});
+
+		it('should produce warning in event delegation mode', function () {
+			const naja = mockNaja({
+				uiHandler: UIHandler,
+			});
+			naja.uiHandler.eventDelegation = true;
+			naja.initialize();
+
+			const sandbox = sinon.spy(console, 'warn');
+
+			naja.uiHandler.bindUI(document.body);
+			const result = console.warn.calledWith('Naja: UIHandler.bindUI has no effect in event delegation mode.');
+
+			expect(result).to.equal(true);
+			sandbox.restore();
 		});
 	});
 
@@ -580,6 +596,24 @@ describe('UIHandler', function () {
 			));
 
 			assert.isTrue(event.defaultPrevented);
+			mock.verify();
+		});
+
+		it('eventDelegation=true', function () {
+			const naja = mockNaja({
+				uiHandler: UIHandler,
+			});
+			naja.uiHandler.eventDelegation = true;
+
+			const mock = sinon.mock(naja);
+			mock.expects('makeRequest')
+				.withExactArgs('GET', 'http://localhost:9876/UIHandler/a', null, {fetch: {}})
+				.once();
+
+			naja.initialize();
+
+			this.a.click();
+
 			mock.verify();
 		});
 	});
