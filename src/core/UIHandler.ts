@@ -4,7 +4,9 @@ import {onDomReady, TypedEventListener} from '../utils';
 export class UIHandler extends EventTarget {
 	public selector: string = '.ajax';
 	public allowedOrigins: (string | URL)[] = [window.location.origin];
+	public eventDelegation: boolean = false;
 	private handler = this.handleUI.bind(this);
+	private linkSelector: string = '';
 
 	public constructor(private readonly naja: Naja) {
 		super();
@@ -12,26 +14,35 @@ export class UIHandler extends EventTarget {
 	}
 
 	private initialize(): void {
-		onDomReady(() => this.bindUI(window.document.body));
-		this.naja.snippetHandler.addEventListener('afterUpdate', (event) => {
-			const {snippet} = event.detail;
-			this.bindUI(snippet);
-		});
+		this.linkSelector = `a${this.selector}`;
+
+		if (this.eventDelegation) {
+			addEventListener('click', this.handler);
+			document.addEventListener('submit', this.handler);
+		} else {
+			onDomReady(() => this.bindUI(window.document.body));
+			this.naja.snippetHandler.addEventListener('afterUpdate', (event) => {
+				const {snippet} = event.detail;
+				this.bindUI(snippet);
+			});
+		}
 	}
 
 	public bindUI(element: Element): void {
-		const selector = `a${this.selector}`;
+		if (this.eventDelegation) {
+			return;
+		}
 
 		const bindElement = (element: HTMLAnchorElement) => {
 			element.removeEventListener('click', this.handler);
 			element.addEventListener('click', this.handler);
 		};
 
-		if (element.matches(selector)) {
+		if (element.matches(this.linkSelector)) {
 			return bindElement(element as HTMLAnchorElement);
 		}
 
-		const elements = element.querySelectorAll(selector);
+		const elements = element.querySelectorAll(this.linkSelector);
 		elements.forEach((element) => bindElement(element as HTMLAnchorElement));
 
 		const bindForm = (form: HTMLFormElement) => {
@@ -48,7 +59,7 @@ export class UIHandler extends EventTarget {
 	}
 
 	private handleUI(event: MouseEvent | SubmitEvent): void {
-		const element = event.currentTarget as HTMLElement;
+		const element = (this.eventDelegation ? event.target : event.currentTarget) as HTMLElement;
 		const options = this.naja.prepareOptions();
 
 		const ignoreErrors = () => {
@@ -60,8 +71,10 @@ export class UIHandler extends EventTarget {
 			if (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey || event.button) {
 				return;
 			}
-
-			this.clickElement(element, options, event).catch(ignoreErrors);
+			const link = this.eventDelegation ? element.closest(this.linkSelector) : element;
+			if (link) {
+				this.clickElement(element, options, event).catch(ignoreErrors);
+			}
 			return;
 		}
 
