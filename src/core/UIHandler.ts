@@ -14,7 +14,7 @@ export class UIHandler extends EventTarget {
 	}
 
 	private initialize(): void {
-		this.linkSelector = `a${this.selector}`;
+		this.linkSelector = `a[href]:not([download])${this.selector}`;
 
 		if (this.eventDelegation) {
 			addEventListener('click', this.handler);
