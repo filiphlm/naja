@@ -30,7 +30,7 @@ export class UIHandler extends EventTarget {
 
 	public bindUI(element: Element): void {
 		if (this.eventDelegation) {
-			console.warn('Naja: UIHandler.bindUI has no effect with `eventDelegation=true`.');
+			console.warn('Naja: UIHandler.bindUI has no effect in event delegation mode.');
 			return;
 		}
 
