@@ -30,6 +30,7 @@ export class UIHandler extends EventTarget {
 
 	public bindUI(element: Element): void {
 		if (this.eventDelegation) {
+			console.warn('Naja: UIHandler.bindUI has no effect with `eventDelegation=true`.');
 			return;
 		}
 
@@ -73,7 +74,7 @@ export class UIHandler extends EventTarget {
 			}
 			const link = this.eventDelegation ? element.closest(this.linkSelector) : element;
 			if (link) {
-				this.clickElement(element, options, event).catch(ignoreErrors);
+				this.clickElement(link as HTMLAnchorElement, options, event).catch(ignoreErrors);
 			}
 			return;
 		}
